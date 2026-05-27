@@ -2608,6 +2608,480 @@
       .aap-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
       .aap-title { font-size: 1rem; }
     }
+
+    /* ═══════════════════════════════════════
+       KEY SYSTEM — NAVBAR INDICATOR
+    ═══════════════════════════════════════ */
+    .key-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px 5px 10px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .key-indicator::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(245,166,35,0.07), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
+    }
+    .key-indicator:hover::before { transform: translateX(100%); }
+    .key-indicator:hover { border-color: rgba(245,166,35,0.5); color: var(--text); }
+
+    .key-icons {
+      display: flex; gap: 3px; align-items: center;
+    }
+    .key-icon {
+      font-size: 0.9rem;
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      filter: grayscale(0);
+    }
+    .key-icon.empty {
+      filter: grayscale(1);
+      opacity: 0.3;
+    }
+    .key-icon.shake {
+      animation: keyShake 0.5s ease;
+    }
+    @keyframes keyShake {
+      0%,100% { transform: rotate(0deg); }
+      20% { transform: rotate(-20deg) scale(1.3); }
+      40% { transform: rotate(20deg) scale(1.3); }
+      60% { transform: rotate(-10deg); }
+      80% { transform: rotate(10deg); }
+    }
+    .key-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+    .key-indicator.unlimited .key-icon { color: #f5a623; }
+
+    /* Premium badge in navbar */
+    .premium-badge-nav {
+      display: none;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #0a0a0f;
+      background: linear-gradient(135deg, #f5a623, #e8941a, #ffd166, #f5a623);
+      background-size: 200% 200%;
+      animation: premiumShimmer 3s linear infinite;
+      border-radius: 2px;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(245,166,35,0.4), 0 0 24px rgba(245,166,35,0.15);
+      position: relative;
+    }
+    .premium-badge-nav.visible { display: flex; }
+    @keyframes premiumShimmer {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .premium-badge-nav::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: premiumGlint 2.5s ease-in-out infinite;
+      border-radius: inherit;
+    }
+    @keyframes premiumGlint {
+      0%,100% { background-position: -100% 0; }
+      50% { background-position: 200% 0; }
+    }
+
+    /* ═══════════════════════════════════════
+       PREMIUM BADGE — USER DROPDOWN
+    ═══════════════════════════════════════ */
+    .premium-crown-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 6px;
+      padding: 4px 10px;
+      font-size: 0.58rem;
+      font-weight: 900;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #0a0a0f;
+      background: linear-gradient(135deg, #ffd166, #f5a623, #e8941a, #ffd166);
+      background-size: 300% 300%;
+      animation: premiumShimmer 3s linear infinite;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(245,166,35,0.45), 0 0 0 1px rgba(245,166,35,0.3);
+    }
+    .premium-crown-badge::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      background-size: 200% 100%;
+      animation: premiumGlint 2.2s ease-in-out infinite;
+    }
+    .premium-crown-badge .crown-icon {
+      font-size: 0.75rem;
+      position: relative; z-index: 1;
+    }
+    .premium-crown-badge span { position: relative; z-index: 1; }
+
+    /* ═══════════════════════════════════════
+       AD MODAL
+    ═══════════════════════════════════════ */
+    .ad-modal {
+      position: fixed; inset: 0;
+      z-index: 9500;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden;
+      transition: all 0.35s;
+    }
+    .ad-modal.open { opacity: 1; visibility: visible; }
+    .ad-backdrop {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.88);
+      backdrop-filter: blur(12px);
+    }
+    .ad-box {
+      position: relative; z-index: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      width: 100%; max-width: 480px;
+      padding: 0;
+      overflow: hidden;
+      box-shadow: 0 32px 100px rgba(0,0,0,0.7);
+      transform: translateY(24px) scale(0.95);
+      transition: transform 0.4s cubic-bezier(0.34,1.2,0.64,1);
+    }
+    .ad-modal.open .ad-box { transform: translateY(0) scale(1); }
+
+    /* YouTube Ad screen */
+    .ad-screen {
+      height: 270px;
+      background: #000;
+      position: relative; overflow: hidden;
+    }
+    .ad-yt-frame {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      border: none; display: block;
+    }
+    /* overlay to block YT controls/logo clicks */
+    .ad-yt-overlay {
+      position: absolute; inset: 0;
+      z-index: 2;
+      /* transparent — only blocks pointer, not view */
+      background: transparent;
+      pointer-events: all;
+    }
+    /* Loading spinner while YT loads */
+    .ad-yt-loading {
+      position: absolute; inset: 0; z-index: 3;
+      background: #000;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 12px; transition: opacity 0.4s;
+    }
+    .ad-yt-loading.hide { opacity: 0; pointer-events: none; }
+    .ad-yt-spinner {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(255,255,255,0.12);
+      border-top-color: #f5a623;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    .ad-yt-loading-text {
+      font-size: 0.7rem; color: rgba(255,255,255,0.4);
+      letter-spacing: 0.15em; text-transform: uppercase;
+    }
+
+    /* Top-right overlay: skip countdown + ad label */
+    .ad-overlay-ui {
+      position: absolute; top: 0; right: 0; left: 0;
+      z-index: 4; pointer-events: none;
+      display: flex; justify-content: space-between;
+      align-items: flex-start;
+      padding: 10px 12px;
+    }
+    .ad-label-badge {
+      background: rgba(0,0,0,0.65);
+      color: rgba(255,255,255,0.7);
+      font-size: 0.6rem; letter-spacing: 0.18em;
+      text-transform: uppercase; padding: 4px 8px;
+      border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(4px);
+    }
+    /* Countdown ring */
+    .ad-timer-wrap {
+      width: 46px; height: 46px;
+      position: relative;
+    }
+    .ad-timer-ring { transform: rotate(-90deg); }
+    .ad-timer-track { fill: none; stroke: rgba(255,255,255,0.12); stroke-width: 3; }
+    .ad-timer-fill {
+      fill: none; stroke: #f5a623; stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 120;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear;
+    }
+    .ad-timer-text {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 700; color: white;
+    }
+
+    /* Bottom gradient for readability */
+    .ad-screen::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 60px; z-index: 3; pointer-events: none;
+      background: linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+    }
+
+    .ad-body {
+      padding: 24px 28px 28px;
+    }
+    .ad-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.1rem; font-weight: 700;
+      margin-bottom: 6px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .ad-title .ad-title-icon { font-size: 1.3rem; }
+    .ad-subtitle {
+      font-size: 0.75rem; color: var(--muted);
+      margin-bottom: 20px; line-height: 1.6;
+    }
+    .ad-reward-preview {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 18px;
+      background: rgba(245,166,35,0.08);
+      border: 1px solid rgba(245,166,35,0.2);
+      margin-bottom: 20px;
+    }
+    .ad-reward-keys {
+      display: flex; gap: 4px; font-size: 1.3rem;
+    }
+    .ad-reward-text { font-size: 0.78rem; color: var(--text); line-height: 1.5; }
+    .ad-reward-text strong { color: #f5a623; }
+
+    .ad-skip-btn {
+      width: 100%; padding: 13px;
+      background: var(--accent); border: none;
+      color: white; font-family: inherit;
+      font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      cursor: pointer; transition: all 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .ad-skip-btn:disabled {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted); cursor: not-allowed;
+      transform: none;
+    }
+    .ad-skip-btn:not(:disabled):hover { background: #ff5572; transform: translateY(-1px); }
+    .ad-progress-bar {
+      height: 3px; background: var(--border); margin-bottom: 14px;
+      overflow: hidden;
+    }
+    .ad-progress-fill {
+      height: 100%; background: #f5a623; width: 0%;
+      transition: width 1s linear;
+    }
+    .ad-or-premium {
+      text-align: center;
+      font-size: 0.68rem; color: var(--muted);
+      margin-top: 14px;
+    }
+    .ad-or-premium span {
+      color: #f5a623; cursor: pointer; font-weight: 700;
+    }
+    .ad-or-premium span:hover { text-decoration: underline; }
+
+    /* ═══════════════════════════════════════
+       PREMIUM UPGRADE MODAL
+    ═══════════════════════════════════════ */
+    .premium-modal {
+      position: fixed; inset: 0;
+      z-index: 9600;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden;
+      transition: all 0.3s;
+    }
+    .premium-modal.open { opacity: 1; visibility: visible; }
+    .premium-backdrop {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(16px);
+    }
+    .premium-box {
+      position: relative; z-index: 1;
+      background: var(--surface);
+      border: 1px solid rgba(245,166,35,0.3);
+      width: 100%; max-width: 460px;
+      overflow: hidden;
+      box-shadow: 0 0 80px rgba(245,166,35,0.15), 0 32px 100px rgba(0,0,0,0.7);
+      transform: translateY(24px) scale(0.96);
+      transition: transform 0.4s cubic-bezier(0.34,1.2,0.64,1);
+    }
+    .premium-modal.open .premium-box { transform: translateY(0) scale(1); }
+
+    .premium-header {
+      padding: 36px 36px 28px;
+      background: linear-gradient(160deg, rgba(245,166,35,0.12) 0%, rgba(232,148,26,0.06) 60%, transparent 100%);
+      text-align: center;
+      position: relative; overflow: hidden;
+      border-bottom: 1px solid rgba(245,166,35,0.15);
+    }
+    .premium-header::before {
+      content: '';
+      position: absolute; top: -40px; left: 50%;
+      transform: translateX(-50%);
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(245,166,35,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .premium-crown {
+      font-size: 3rem;
+      display: block; margin-bottom: 10px;
+      animation: crownFloat 3s ease-in-out infinite;
+    }
+    @keyframes crownFloat {
+      0%,100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-6px) rotate(3deg); }
+    }
+    .premium-header-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.5rem; font-weight: 900;
+      background: linear-gradient(135deg, #ffd166, #f5a623, #e8941a);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+    .premium-header-sub {
+      font-size: 0.78rem; color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    .premium-features {
+      padding: 24px 36px;
+      border-bottom: 1px solid var(--border);
+    }
+    .premium-feature {
+      display: flex; align-items: center; gap: 14px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.82rem;
+    }
+    .premium-feature:last-child { border-bottom: none; }
+    .pf-icon {
+      width: 34px; height: 34px; flex-shrink: 0;
+      background: rgba(245,166,35,0.1);
+      border: 1px solid rgba(245,166,35,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .pf-text { flex: 1; }
+    .pf-label { font-weight: 700; margin-bottom: 2px; }
+    .pf-desc { font-size: 0.68rem; color: var(--muted); }
+    .pf-check { color: #4ade80; font-size: 0.9rem; font-weight: 700; }
+
+    .premium-pricing {
+      padding: 20px 36px 24px;
+    }
+    .price-row {
+      display: flex; align-items: baseline; gap: 6px;
+      margin-bottom: 16px;
+    }
+    .price-amount {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 2rem; font-weight: 900;
+      color: #f5a623;
+    }
+    .price-period { font-size: 0.72rem; color: var(--muted); }
+    .price-old {
+      font-size: 0.78rem; color: var(--muted);
+      text-decoration: line-through; margin-left: 4px;
+    }
+    .btn-upgrade {
+      width: 100%; padding: 15px;
+      background: linear-gradient(135deg, #f5a623, #e8941a);
+      border: none; color: #0a0a0f;
+      font-family: inherit; font-size: 0.85rem;
+      font-weight: 900; letter-spacing: 0.14em;
+      text-transform: uppercase; cursor: pointer;
+      transition: all 0.2s;
+      position: relative; overflow: hidden;
+      box-shadow: 0 4px 20px rgba(245,166,35,0.35);
+    }
+    .btn-upgrade::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
+    }
+    .btn-upgrade:hover::before { transform: translateX(100%); }
+    .btn-upgrade:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(245,166,35,0.45); }
+    .btn-upgrade-demo {
+      width: 100%; padding: 11px;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--muted); font-family: inherit;
+      font-size: 0.75rem; letter-spacing: 0.06em;
+      cursor: pointer; margin-top: 10px;
+      transition: all 0.2s;
+    }
+    .btn-upgrade-demo:hover { border-color: var(--accent); color: var(--text); }
+    .premium-close-btn {
+      position: absolute; top: 14px; right: 16px;
+      background: none; border: none; color: var(--muted);
+      cursor: pointer; font-size: 1.2rem;
+      transition: color 0.2s; padding: 4px;
+    }
+    .premium-close-btn:hover { color: var(--text); }
+
+    /* Keys empty state animation */
+    .key-empty-flash {
+      animation: keyEmptyFlash 0.4s ease;
+    }
+    @keyframes keyEmptyFlash {
+      0%,100% { border-color: var(--border); }
+      50% { border-color: rgba(233,69,96,0.8); box-shadow: 0 0 12px rgba(233,69,96,0.3); }
+    }
+
+    /* Premium indicator in dropdown */
+    .premium-dropdown-badge {
+      display: none;
+      align-items: center; gap: 5px;
+      padding: 6px 16px;
+      background: rgba(245,166,35,0.08);
+      border-bottom: 1px solid rgba(245,166,35,0.15);
+      font-size: 0.68rem; color: #f5a623;
+      letter-spacing: 0.1em;
+    }
+    .premium-dropdown-badge.show { display: flex; }
+
+    /* Key consumed animation */
+    @keyframes keyFly {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.6) rotate(20deg); opacity: 0.5; }
+      100% { transform: scale(0.3) translateY(-20px); opacity: 0; }
+    }
+    .key-fly { animation: keyFly 0.5s ease forwards; }
   </style>
 </head>
 <body>
@@ -2924,7 +3398,14 @@
           <div>
             <div class="user-dropdown-name" id="userDropdownName">—</div>
             <div class="user-dropdown-email" id="userDropdownEmail">—</div>
+            <div class="premium-crown-badge" id="premiumDropdownBadge" style="display:none">
+              <span class="crown-icon">👑</span><span>PREMIUM</span>
+            </div>
           </div>
+        </div>
+        <!-- Premium info row in dropdown -->
+        <div class="premium-dropdown-badge" id="premiumDropdownRow">
+          <span>👑</span> Member Premium Aktif — Kunci Unlimited
         </div>
         <button class="user-dropdown-item" onclick="openWatchlist();toggleUserDropdown()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -2935,6 +3416,11 @@
           Ganti Tema
         </button>
         <div class="user-dropdown-divider"></div>
+        <button class="user-dropdown-item" id="upgradeDropdownBtn" onclick="openPremiumModal();toggleUserDropdown()" style="color:#f5a623">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+          Upgrade ke Premium
+        </button>
+        <div class="user-dropdown-divider"></div>
         <button class="user-dropdown-item danger" onclick="authSignOut()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           Keluar
@@ -2943,6 +3429,18 @@
     </div>
     <!-- Login button (shown when logged out) -->
     <button class="btn-login" id="loginNavBtn" onclick="openAuthModal()">Masuk</button>
+    <!-- Premium badge (shown when premium) -->
+    <button class="premium-badge-nav" id="premiumNavBadge" onclick="openPremiumModal()">
+      <span>👑</span> PREMIUM
+    </button>
+    <!-- Key indicator (shown when free user) -->
+    <button class="key-indicator" id="keyIndicator" onclick="openKeyInfo()" title="Kunci nonton kamu">
+      <div class="key-icons" id="keyIconsNav">
+        <span class="key-icon" id="keyIcon1">🗝️</span>
+        <span class="key-icon" id="keyIcon2">🗝️</span>
+      </div>
+      <span class="key-label" id="keyLabel">2 Kunci</span>
+    </button>
   </div>
 </nav>
 
@@ -3977,7 +4475,7 @@ function resetLinkInput() {
   if (badge) { badge.className = 'link-type-badge'; badge.textContent = ''; }
 }
 
-function openPlayer(title, ep, eps, startEp) {
+function _openPlayerCore(title, ep, eps, startEp) {
   currentAnime     = title;
   currentEp        = typeof startEp === 'number' ? startEp : (typeof eps === 'number' ? 1 : 1);
   currentAnimeData = ANIME_DB.find(a => a.title === title) || null;
@@ -4731,6 +5229,281 @@ document.addEventListener('keydown', e => {
   }
 });
 
+// ══════════════════════════════════════════════════════════════
+// KEY SYSTEM — Sistem Kunci Nonton AniZen
+// ══════════════════════════════════════════════════════════════
+
+const KEY_STORAGE   = 'anizen_keys';
+const PREM_STORAGE  = 'anizen_premium';
+const MAX_FREE_KEYS = 2;
+
+const keySystem = {
+  keys:      parseInt(localStorage.getItem(KEY_STORAGE)  ?? MAX_FREE_KEYS),
+  isPremium: localStorage.getItem(PREM_STORAGE) === 'true',
+
+  save() {
+    localStorage.setItem(KEY_STORAGE,  this.keys);
+    localStorage.setItem(PREM_STORAGE, this.isPremium);
+  },
+
+  // Called before opening player; returns true if allowed
+  consume() {
+    if (this.isPremium) return true;
+    if (this.keys <= 0) return false;
+    this.keys--;
+    this.save();
+    this.renderNav();
+    return true;
+  },
+
+  addKeys(n = 2) {
+    this.keys = Math.min(this.keys + n, MAX_FREE_KEYS);
+    this.save();
+    this.renderNav();
+  },
+
+  activatePremium() {
+    this.isPremium = true;
+    this.save();
+    this.renderNav();
+  },
+
+  deactivatePremium() {
+    this.isPremium = false;
+    this.keys = MAX_FREE_KEYS;
+    this.save();
+    this.renderNav();
+  },
+
+  renderNav() {
+    const indicator     = document.getElementById('keyIndicator');
+    const premNavBadge  = document.getElementById('premiumNavBadge');
+    const premDropBadge = document.getElementById('premiumDropdownBadge');
+    const premDropRow   = document.getElementById('premiumDropdownRow');
+    const upgradeBtn    = document.getElementById('upgradeDropdownBtn');
+    const k1 = document.getElementById('keyIcon1');
+    const k2 = document.getElementById('keyIcon2');
+    const lbl = document.getElementById('keyLabel');
+
+    if (this.isPremium) {
+      // Show premium badge, hide key indicator
+      if (indicator)    indicator.style.display     = 'none';
+      if (premNavBadge) premNavBadge.classList.add('visible');
+      if (premDropBadge) premDropBadge.style.display = 'inline-flex';
+      if (premDropRow)   premDropRow.classList.add('show');
+      if (upgradeBtn)    upgradeBtn.style.display    = 'none';
+    } else {
+      // Show key indicator
+      if (indicator)    indicator.style.display     = '';
+      if (premNavBadge) premNavBadge.classList.remove('visible');
+      if (premDropBadge) premDropBadge.style.display = 'none';
+      if (premDropRow)   premDropRow.classList.remove('show');
+      if (upgradeBtn)    upgradeBtn.style.display    = '';
+
+      // Update key icons
+      if (k1) k1.classList.toggle('empty', this.keys < 1);
+      if (k2) k2.classList.toggle('empty', this.keys < 2);
+      if (lbl) {
+        if (this.keys === 0) {
+          lbl.textContent = 'Habis!';
+          lbl.style.color = 'var(--accent)';
+        } else {
+          lbl.textContent = this.keys + ' Kunci';
+          lbl.style.color = '';
+        }
+      }
+    }
+  }
+};
+
+// Initialize on load
+keySystem.renderNav();
+
+// ── Wrap openPlayer with key check ────────────────────────────
+function openPlayer(title, ep, eps, startEp) {
+  if (!keySystem.consume()) {
+    // No keys left — show ad modal, then open player after reward
+    showAdModal(() => {
+      _openPlayerCore(title, ep, eps, startEp);
+    });
+    return;
+  }
+  // Show key consumed toast (not for premium)
+  if (!keySystem.isPremium) {
+    const remaining = keySystem.keys;
+    const msg = remaining === 0
+      ? '🗝️ Kunci terakhir digunakan! Tonton iklan untuk isi ulang.'
+      : `🗝️ Kunci digunakan. Tersisa ${remaining} kunci.`;
+    showToast(msg, remaining === 0 ? 'warn' : 'info');
+    // Shake key icon for feedback
+    const iconId = remaining === 0 ? 'keyIcon1' : 'keyIcon2';
+    const k = document.getElementById(iconId);
+    if (k) {
+      k.classList.add('shake');
+      setTimeout(() => k.classList.remove('shake'), 600);
+    }
+  }
+  _openPlayerCore(title, ep, eps, startEp);
+}
+
+// ── AD MODAL — Adsterra ───────────────────────────────────────
+let adCallback = null;
+let adTimer    = null;
+const AD_DURATION = 20; // detik wajib tonton
+
+function _loadAdsterraScript() {
+  // Hapus script lama jika ada
+  const old = document.getElementById('adsterraScript');
+  if (old) old.remove();
+
+  const container = document.getElementById('adsterraContainer');
+  if (!container) return;
+  container.innerHTML = ''; // bersihkan isi lama
+
+  // Buat wrapper div sebagai target iklan
+  const adDiv = document.createElement('div');
+  adDiv.style.cssText = 'width:100%;min-height:250px;display:flex;align-items:center;justify-content:center;';
+  container.appendChild(adDiv);
+
+  // Muat script Adsterra
+  const script = document.createElement('script');
+  script.id  = 'adsterraScript';
+  script.src = 'https://pl29564747.effectivecpmnetwork.com/6f/ab/26/6fab26e6d56db8f2856bab356cf23236.js';
+  script.async = true;
+  container.appendChild(script);
+}
+
+function showAdModal(callback) {
+  // Guard: user premium tidak perlu nonton iklan
+  if (keySystem.isPremium) {
+    if (callback) callback();
+    return;
+  }
+
+  adCallback = callback;
+  const modal     = document.getElementById('adModal');
+  const skipBtn   = document.getElementById('adSkipBtn');
+  const fill      = document.getElementById('adProgressFill');
+  const timerTxt  = document.getElementById('adTimerText');
+  const timerRing = document.getElementById('adTimerFill');
+  const loading   = document.getElementById('adYtLoading');
+
+  // Reset UI
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  skipBtn.disabled = true;
+  skipBtn.innerHTML = `Menunggu… (<span id="adSkipCountdown">${AD_DURATION}</span>s)`;
+  fill.style.transition = 'none';
+  fill.style.width = '0%';
+  loading.classList.remove('hide');
+
+  const circumference = 2 * Math.PI * 19;
+  timerRing.style.strokeDasharray  = circumference;
+  timerRing.style.strokeDashoffset = 0;
+
+  // Muat iklan Adsterra ke dalam container
+  _loadAdsterraScript();
+
+  // Sembunyikan loading setelah iklan sempat dimuat
+  setTimeout(() => loading.classList.add('hide'), 2500);
+
+  // Mulai countdown 20 detik
+  let secs = AD_DURATION;
+  clearInterval(adTimer);
+  adTimer = setInterval(() => {
+    secs--;
+    const el = document.getElementById('adSkipCountdown');
+    if (el) el.textContent = secs;
+    if (timerTxt) timerTxt.textContent = secs;
+
+    // Progress bar
+    fill.style.transition = 'width 1s linear';
+    fill.style.width = (((AD_DURATION - secs) / AD_DURATION) * 100) + '%';
+
+    // Ring countdown
+    if (timerRing) timerRing.style.strokeDashoffset = (secs / AD_DURATION) * circumference;
+
+    if (secs <= 0) {
+      clearInterval(adTimer);
+      const btn = document.getElementById('adSkipBtn');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '🗝️ Ambil Kunci & Tonton!';
+      }
+    }
+  }, 1000);
+}
+
+function closeAdModal() {
+  const modal     = document.getElementById('adModal');
+  const container = document.getElementById('adsterraContainer');
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+  clearInterval(adTimer);
+  // Hentikan & bersihkan iklan Adsterra
+  if (container) container.innerHTML = '';
+  const old = document.getElementById('adsterraScript');
+  if (old) old.remove();
+  adCallback = null;
+}
+
+function claimAdReward() {
+  keySystem.addKeys(2);
+  closeAdModal();
+  showToast('🗝️🗝️ +2 Kunci diterima! Selamat menonton!', 'success');
+
+  // Animate key icons
+  const k1 = document.getElementById('keyIcon1');
+  const k2 = document.getElementById('keyIcon2');
+  [k1, k2].forEach((k, i) => {
+    if (!k) return;
+    setTimeout(() => { k.classList.add('shake'); setTimeout(() => k.classList.remove('shake'), 600); }, i * 180);
+  });
+
+  // If there was a pending callback, trigger it after short delay
+  if (adCallback) {
+    const cb = adCallback;
+    adCallback = null;
+    setTimeout(cb, 600);
+  }
+}
+
+// ── PREMIUM MODAL ─────────────────────────────────────────────
+function openPremiumModal() {
+  document.getElementById('premiumModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePremiumModal() {
+  document.getElementById('premiumModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function activatePremiumDemo() {
+  keySystem.activatePremium();
+  closePremiumModal();
+  showToast('👑 Premium aktif! Kunci unlimited. Selamat menikmati!', 'success');
+  // Close any pending ad
+  closeAdModal();
+}
+
+function openKeyInfo() {
+  if (keySystem.isPremium) {
+    openPremiumModal();
+    return;
+  }
+  if (keySystem.keys <= 0) {
+    showAdModal(null);
+  } else {
+    showToast(`🗝️ Kamu punya ${keySystem.keys} kunci. Setiap kunci = 1 episode.`, 'info');
+  }
+}
+
+// ESC closes modals
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeAdModal(); closePremiumModal(); }
+});
+
 
 // ══════════════════════════════════════════
 // AUTH UI HELPERS (non-Firebase, work always)
@@ -5140,6 +5913,133 @@ console.log('🔥 Firebase Auth siap — ganti firebaseConfig untuk mengaktifkan
     </div>
   </div>
 </div>
+
+<!-- ═══════════════════════════════════════════════════
+     AD MODAL — Tonton Iklan untuk Dapat Kunci
+═══════════════════════════════════════════════════ -->
+<div class="ad-modal" id="adModal">
+  <div class="ad-backdrop"></div>
+  <div class="ad-box">
+
+    <!-- Adsterra Ad Screen -->
+    <div class="ad-screen" id="adScreen">
+
+      <!-- Adsterra Ad Container -->
+      <div id="adsterraContainer" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0a0a0f;position:relative;overflow:hidden;">
+        <!-- Script Adsterra dimuat secara dinamis oleh JS saat modal dibuka -->
+      </div>
+
+      <!-- Loading spinner shown until ad loads -->
+      <div class="ad-yt-loading" id="adYtLoading">
+        <div class="ad-yt-spinner"></div>
+        <div class="ad-yt-loading-text">Memuat iklan…</div>
+      </div>
+
+      <!-- Top overlay UI: ad label + countdown ring -->
+      <div class="ad-overlay-ui">
+        <div class="ad-label-badge">📢 IKLAN</div>
+        <div class="ad-timer-wrap">
+          <svg class="ad-timer-ring" width="46" height="46" viewBox="0 0 46 46">
+            <circle class="ad-timer-track" cx="23" cy="23" r="19"/>
+            <circle class="ad-timer-fill" id="adTimerFill" cx="23" cy="23" r="19"/>
+          </svg>
+          <div class="ad-timer-text" id="adTimerText">20</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom panel -->
+    <div class="ad-body">
+      <div class="ad-progress-bar">
+        <div class="ad-progress-fill" id="adProgressFill"></div>
+      </div>
+      <div class="ad-title">
+        <span class="ad-title-icon">🗝️</span>
+        Tonton untuk Dapat Kunci
+      </div>
+      <div class="ad-subtitle">
+        Tonton iklan selama <strong>20 detik</strong> dan kamu akan mendapat <strong>2 kunci baru</strong> untuk lanjut nonton.
+      </div>
+      <div class="ad-reward-preview">
+        <div class="ad-reward-keys">🗝️🗝️</div>
+        <div class="ad-reward-text">
+          Kamu akan mendapat <strong>+2 Kunci</strong><br>
+          <span style="font-size:0.65rem;color:var(--muted)">Setiap kunci bisa dipakai untuk 1 episode</span>
+        </div>
+      </div>
+      <button class="ad-skip-btn" id="adSkipBtn" disabled onclick="claimAdReward()">
+        Menunggu… (<span id="adSkipCountdown">20</span>s)
+      </button>
+      <div class="ad-or-premium">
+        Capek nonton iklan? <span onclick="closeAdModal();openPremiumModal()">Upgrade ke Premium →</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PREMIUM UPGRADE MODAL
+═══════════════════════════════════════════════════ -->
+<div class="premium-modal" id="premiumModal">
+  <div class="premium-backdrop" onclick="closePremiumModal()"></div>
+  <div class="premium-box">
+    <button class="premium-close-btn" onclick="closePremiumModal()">✕</button>
+    <div class="premium-header">
+      <span class="premium-crown">👑</span>
+      <div class="premium-header-title">AniZen Premium</div>
+      <div class="premium-header-sub">プレミアム — Nonton tanpa batas</div>
+    </div>
+    <div class="premium-features">
+      <div class="premium-feature">
+        <div class="pf-icon">🗝️</div>
+        <div class="pf-text">
+          <div class="pf-label">Kunci Unlimited</div>
+          <div class="pf-desc">Tonton episode sebanyak yang kamu mau tanpa batas kunci</div>
+        </div>
+        <div class="pf-check">✓</div>
+      </div>
+      <div class="premium-feature">
+        <div class="pf-icon">🚫</div>
+        <div class="pf-text">
+          <div class="pf-label">Bebas Iklan</div>
+          <div class="pf-desc">Tidak ada iklan yang mengganggu — langsung nonton!</div>
+        </div>
+        <div class="pf-check">✓</div>
+      </div>
+      <div class="premium-feature">
+        <div class="pf-icon">⚡</div>
+        <div class="pf-text">
+          <div class="pf-label">Akses Prioritas</div>
+          <div class="pf-desc">Episode baru tersedia lebih awal untuk member premium</div>
+        </div>
+        <div class="pf-check">✓</div>
+      </div>
+      <div class="premium-feature">
+        <div class="pf-icon">🏅</div>
+        <div class="pf-text">
+          <div class="pf-label">Badge Premium Eksklusif</div>
+          <div class="pf-desc">Tampilkan status premium kamu dengan badge spesial</div>
+        </div>
+        <div class="pf-check">✓</div>
+      </div>
+    </div>
+    <div class="premium-pricing">
+      <div class="price-row">
+        <div class="price-amount">Rp 29.000</div>
+        <div class="price-period">/ bulan</div>
+        <div class="price-old">Rp 59.000</div>
+      </div>
+      <button class="btn-upgrade" onclick="activatePremiumDemo()">
+        👑 Aktifkan Premium Sekarang
+      </button>
+      <button class="btn-upgrade-demo" onclick="activatePremiumDemo()">
+        Demo: Aktifkan Premium (gratis untuk test)
+      </button>
+    </div>
+  </div>
+</div>
+
 
 </body>
 </html>
